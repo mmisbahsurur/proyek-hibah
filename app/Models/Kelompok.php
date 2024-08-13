@@ -10,7 +10,7 @@ class Kelompok extends Model
     use HasFactory;
     protected $table = 'tbl_kelompoktani';
     protected $guarded = [];
-    
+
 
     public function mkota()
     {
@@ -25,5 +25,10 @@ class Kelompok extends Model
     public function mdesa()
     {
         return $this->belongsTo(Mdesa::class, 'desa', 'id');
+    }
+
+    public function hibah()
+    {
+        return $this->hasMany(Hibah::class, 'id_kelompoktani', 'id');
     }
 }

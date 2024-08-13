@@ -82,44 +82,35 @@
                 <thead>
                     <tr>
                         <td>Kota</td>
-                        @foreach ($jenis_hibahs as $jenis_hibah)
-                        <td>
-                            {{ $jenis_hibah->nama.' - ' .$jenis_hibah->satuan }}
-                        </td>
+                        @foreach($jenis_hibahs as $jenis_hibah)
+                        <td> {{ $jenis_hibah->nama.' - '.$jenis_hibah->satuan }}</td>
                         @endforeach
                     </tr>
                 </thead>
                 <tbody>
-                   @php
-                       $totalHibah = [];
-                       foreach ($jenis_hibahs as $key => $jenis_hibah) {
-                        $totalHibah[$key] = 0;
-                       }
-                   @endphp
-                   @if ($countKota > 0)
-                   @foreach ($kotas as $kota)
-                       <tr>
-                        <td>
-                            {{ $kota->name }}
-                        </td>
-                        @foreach ($jenis_hibahs as $key => $jenis_hibah)
-                        @php
-                            $totalHibah[$key] += getHibah($kota->kelompoktani, $jenis_hibah->id);
-                        @endphp
-                            <td>{{ number_format(getHibah($kota->kelompoktani, $jenis_hibah->id)) }}</td>
+                    @php
+                        $totalHibah = array_fill(0, count($jenis_hibahs), 0);
+                    @endphp
+                    @if ($countKota > 0)
+                        @foreach ($kotas as $kota)
+                            <tr>
+                                <td>{{ $kota->name }}</td>
+                                @foreach ($jenis_hibahs as $key => $jenis_hibah)
+                                    @php
+                                        $hibahAmount = $hibah_totals[$kota->id][$jenis_hibah->id];
+                                        $totalHibah[$key] += $hibahAmount;
+                                    @endphp
+                                    <td>{{ number_format($hibahAmount) }}</td>
+                                @endforeach
+                            </tr>
                         @endforeach
-                       </tr>
-                   @endforeach
-                   @endif
+                    @endif
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th>
-                            Total Hibah
-                        </th>
-                        @foreach ($jenis_hibahs as $jenis_hibah)
-                        <th> {{ number_format($totalHibah[$key]) }}</th>
-                            
+                        <th>Total Hibah</th>
+                        @foreach($jenis_hibahs as $key => $jenis_hibah)
+                        <th>{{ number_format($totalHibah[$key]) }}</th>
                         @endforeach
                     </tr>
                 </tfoot>
